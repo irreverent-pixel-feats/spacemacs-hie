@@ -15,10 +15,13 @@
 (setq hie-packages '(
   company
   company-lsp
+  flycheck
+  (flycheck-haskell :toggle (configuration-layer/package-usedp 'flycheck))
   haskell-snippets
-  lsp-mode
-  lsp-ui
+  haskell-mode
   lsp-haskell
+  lsp-ui
+  lsp-mode
   ))
 
 ;; List of packages to exclude.
@@ -34,12 +37,27 @@
 ;; For more info on `use-package', see readme:
 ;; https://github.com/jwiegley/use-package
 
-(defun hie/post-init-company ()
-  (spacemacs|add-company-hook lsp-mode)
-)
+;; (defun hie/post-init-company ()
+;;  (spacemacs|add-company-hook lsp-mode)
+;;)
 
 (defun hie/init-company-lsp ()
   (use-package company-lsp)
+)
+
+(defun hie/init-flycheck ()
+  (use-package flycheck)
+)
+
+(defun haskell/post-init-flycheck ()
+  (spacemacs/add-flycheck-hook 'haskell-mode)
+)
+
+(defun hie/init-flycheck-haskell ()
+  (use-package flycheck-haskell
+    :commands flycheck-haskell-configure
+    :init (add-hook 'flycheck-mode-hook 'flycheck-haskell-configure)
+  )
 )
 
 (defun hie/init-haskell-snippets ()
@@ -73,7 +91,12 @@
 )
 
 (defun hie/init-lsp-haskell ()
-  (use-package lsp-haskell)
+  (use-package lsp-haskell
+    :config
+    (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+    (add-hook 'haskell-mode-hook #'lsp-haskell-enable)
+    (add-hook 'haskell-mode-hook 'flycheck-mode)
+  )
 )
 ;;
 ;;(defun ipf/init-proof-general ()
