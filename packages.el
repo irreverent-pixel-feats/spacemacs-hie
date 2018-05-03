@@ -13,9 +13,7 @@
 ;; List of all packages to install and/or initialize. Built-in packages
 ;; which require an initialization must be listed explicitly in the list.
 (setq hie-packages '(
-  company
   company-lsp
-  flycheck
   (flycheck-haskell :toggle (configuration-layer/package-usedp 'flycheck))
   haskell-snippets
   haskell-mode
@@ -45,19 +43,15 @@
   (use-package company-lsp)
 )
 
-(defun hie/init-flycheck ()
-  (use-package flycheck)
-)
-
-(defun haskell/post-init-flycheck ()
-  (spacemacs/add-flycheck-hook 'haskell-mode)
-)
-
 (defun hie/init-flycheck-haskell ()
   (use-package flycheck-haskell
     :commands flycheck-haskell-configure
     :init (add-hook 'flycheck-mode-hook 'flycheck-haskell-configure)
   )
+)
+
+(defun hie/init-haskell-mode ()
+  (use-package haskell-mode)
 )
 
 (defun hie/init-haskell-snippets ()
@@ -98,17 +92,3 @@
     (add-hook 'haskell-mode-hook 'flycheck-mode)
   )
 )
-;;
-;;(defun ipf/init-proof-general ()
-;;  "Initialize Proof General"
-;;  (use-package proof-site
-;;    :defer t
-;;    :mode ("\\.v\\'" . ipf-mode)
-;;    :load-path
-;;    "~/proof-general/generic")
-;;  :config (progn
-;;    (spacemacs/set-leader-keys-for-major-mode 'ipf-mode
-;;      "]" 'proof-assert-next-command-interactive
-;;      "[" 'proof-undo-last-successful-command
-;;      "." 'proof-goto-point
-;;      )))
